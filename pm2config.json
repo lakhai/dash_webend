@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "dashboard-webend",
+      "script": "yarn",
+      "args": "start"
+    }
+  ]
+}
