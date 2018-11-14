@@ -6,7 +6,7 @@ export const accessTokenSelector = () => {
 
 export const isLoggedInSelector = createSelector(
   accessTokenSelector,
-  (accessToken) => {
+  accessToken => {
     return !!accessToken;
   }
 );

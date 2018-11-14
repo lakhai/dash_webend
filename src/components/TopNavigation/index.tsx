@@ -4,7 +4,7 @@ import {
 } from 'semantic-ui-react';
 
 export interface Props {
-  toggleSidebar: Function;
+  toggleSidebar: () => void;
 }
 
 class TopNavigation extends React.Component<Props, {}> {

@@ -4,12 +4,12 @@ import 'semantic-ui-css/semantic.min.css';
 
 import * as actions from './redux/actions';
 import Auth from './containers/Auth';
-import Dashboard from './containers/Dashboard';
 import { LoginDto } from './models';
 import { isLoggedInSelector } from './redux/selectors';
 import PrivateRoute from './components/PrivateRoute';
 import { history } from './helpers/history';
 import { Button } from 'semantic-ui-react';
+import DashboardLayout from './containers/DashboardLayout';
 
 // const Dashboard = () => {
 //   return (
@@ -25,11 +25,11 @@ import { Button } from 'semantic-ui-react';
 // };
 
 class App extends React.Component {
-  public render() {
+  render() {
     return (
       <Router history={history}>
         <React.Fragment>
-          <PrivateRoute exact={true} path="/" component={Dashboard} />
+          <PrivateRoute path="/dashboard" component={DashboardLayout} />
           <Route path="/login" component={Auth} />
         </React.Fragment>
       </Router>

@@ -13,44 +13,24 @@ import {
   Icon,
   Sidebar,
 } from 'semantic-ui-react';
-import TopNavigation from '../../components/TopNavigation';
-import HorizontalSidebar from 'src/components/HorizontalSidebar';
-
-import './styles.css';
 
 interface Props {
   history: any;
 }
-interface State {
-  isSidebarOpen: boolean;
-}
+// interface State { }
 
-class Dashboard extends React.Component<Props, State> {
+class Dashboard extends React.Component<Props, {}> {
   state = {
-    isSidebarOpen: false,
   };
 
-  toggleSidebar = () => this.setState({ isSidebarOpen: !this.state.isSidebarOpen });
-
-  logOut = () => {
-    localStorage.removeItem('accessToken');
-    this.props.history.push('/');
-  }
-
   render() {
-    const { isSidebarOpen } = this.state;
     return (
-      <Container id="dashboard" fluid={true}>
-        <TopNavigation toggleSidebar={this.toggleSidebar} />
-        <Sidebar.Pushable as={Segment} padded={false} style={{ marginTop: '0' }} basic={true}>
-          <HorizontalSidebar logout={this.logOut} isOpen={isSidebarOpen} />
-          <Sidebar.Pusher>
-            <Segment basic={true}>
-              <h1>Dashboard</h1>
-            </Segment>
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
-      </Container>
+      <Segment basic={true}>
+        <Header as="h1" icon={true} textAlign="center">
+          <Icon color="teal" name="compass" circular={true} />
+          <Header.Content>Dashboard</Header.Content>
+        </Header>
+      </Segment>
     );
   }
 }

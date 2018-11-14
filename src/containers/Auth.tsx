@@ -17,8 +17,8 @@ import {
 import { api } from '../constants';
 
 export interface Props {
-  getToken: Function;
-  logOut: Function;
+  getToken: () => void;
+  logOut: () => void;
   isLoggedIn: boolean;
   history: any;
 }
@@ -38,28 +38,28 @@ export interface State {
 // }
 
 class Auth extends React.Component<Props, State> {
-  public state: State = {
+  state: State = {
     activeTab: '',
     email: 'salines.sebastian@gmail.com',
-    isLoading: false,
-    password: 'string',
-    isRegistering: false,
     firstName: '',
+    isLoading: false,
+    isRegistering: false,
     lastName: '',
+    password: 'string',
   };
 
   get headerText() {
     return this.state.isRegistering ? (
       <React.Fragment>
         <Button icon={true} onClick={this.showLoginForm} circular={true} color="teal">
-          <Icon name="arrow left"/>
+          <Icon name="arrow left" />
         </Button>
         <span>Register a new account</span>
       </React.Fragment>
     ) : 'Log-in to your account';
   }
 
-  public onSubmit = () => {
+  onSubmit = () => {
     const {
       email,
       password,
@@ -71,11 +71,11 @@ class Auth extends React.Component<Props, State> {
       this.setState({ isLoading: true }, () => {
         axios.post(`${api.url}/auth/register`, {
           email,
-          password,
           firstName,
           lastName,
+          password,
         })
-          .then(({ accessToken }: any) => {
+          .then(({ data: { accessToken } }) => {
             localStorage.setItem('accessToken', accessToken);
             this.setState({ isLoading: false, isRegistering: false });
           })
@@ -88,7 +88,7 @@ class Auth extends React.Component<Props, State> {
         axios.post(`${api.url}/auth/login`, {
           email, password,
         })
-          .then(({ accessToken }: any) => {
+          .then(({ data: { accessToken } }) => {
             localStorage.setItem('accessToken', accessToken);
             this.setState({ isLoading: false }, () => this.props.history.push('/'));
           })
@@ -99,19 +99,19 @@ class Auth extends React.Component<Props, State> {
     }
   }
 
-  public onChangeEmail = (e: any, { value: email }: InputOnChangeData) => this.setState({ email });
+  onChangeEmail = (e: any, { value: email }: InputOnChangeData) => this.setState({ email });
 
-  public onChangePassword = (e: any, { value: password }: InputOnChangeData) => this.setState({ password });
+  onChangePassword = (e: any, { value: password }: InputOnChangeData) => this.setState({ password });
 
-  public onChangeFirstName = (e: any, { value: firstName }: InputOnChangeData) => this.setState({ firstName });
+  onChangeFirstName = (e: any, { value: firstName }: InputOnChangeData) => this.setState({ firstName });
 
-  public onChangeLastName = (e: any, { value: lastName }: InputOnChangeData) => this.setState({ lastName });
+  onChangeLastName = (e: any, { value: lastName }: InputOnChangeData) => this.setState({ lastName });
 
-  public showRegisterForm = () => this.setState({ isRegistering: true });
+  showRegisterForm = () => this.setState({ isRegistering: true });
 
-  public showLoginForm = () => this.setState({ isRegistering: false });
+  showLoginForm = () => this.setState({ isRegistering: false });
 
-  public renderCurrentForm = () => {
+  renderCurrentForm = () => {
     const {
       email,
       password,
@@ -184,7 +184,7 @@ class Auth extends React.Component<Props, State> {
     );
   }
 
-  public render() {
+  render() {
 
     return (
       <Container fluid={true} className="login-form">

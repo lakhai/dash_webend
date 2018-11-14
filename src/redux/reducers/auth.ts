@@ -1,14 +1,17 @@
 import * as types from '../constants';
+import { User } from 'src/models';
 
 interface State {
   isLoading: boolean;
-  accessToken: string|null;
+  accessToken: string | null;
   isLoggedIn: boolean;
+  currentUser: User | null;
 }
 const initialState = {
   isLoading: false,
   accessToken: null,
   isLoggedIn: false,
+  currentUser: null,
 };
 
 const authReducer = (state: State = initialState, action: any): State => {

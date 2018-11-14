@@ -8,11 +8,10 @@ import {
   Button,
   Segment,
 } from 'semantic-ui-react';
-import { LOGOUT } from 'src/redux/constants';
 
 export interface Props {
   isOpen: boolean;
-  logout: Function;
+  logout: () => void;
 }
 class HorizontalSidebar extends React.Component<Props, {}> {
   shouldComponentUpdate(nextProps: Props) {
@@ -32,11 +31,11 @@ class HorizontalSidebar extends React.Component<Props, {}> {
         icon={isOpen ? 'labeled' : true}
         width={isOpen ? 'thin' : 'very thin'}
       >
-        <Menu.Item name="home" href="/">
+        <Menu.Item name="home" href="/dashboard">
           <Icon size="small" name="home" />
           {isOpen && 'Home'}
         </Menu.Item>
-        <Menu.Item name="goals" href="/goals">
+        <Menu.Item name="goals" href="/dashboard/goals">
           <Icon size="small" name="list ul" />
           {isOpen && 'Goals'}
         </Menu.Item>
