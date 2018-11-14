@@ -2,6 +2,7 @@
   "name": "webend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://lakhai.github.io/dash_webend",
   "dependencies": {
     "@types/redux-logger": "^3.0.6",
     "axios": "^0.18.0",
@@ -23,6 +24,8 @@
     "semantic-ui-react": "^0.83.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
@@ -33,6 +36,7 @@
     "@types/node": "^10.12.2",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
+    "gh-pages": "^2.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
