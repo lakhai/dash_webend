@@ -18,7 +18,7 @@ import {
   FAIL_GOAL_FAILED,
   FAIL_GOAL_SUCCESS,
 } from '../constants';
-import { Goal } from 'src/models';
+import { Goal, GoalStatuses } from 'src/models';
 
 export interface GoalsReducer {
   isLoading: boolean;
@@ -44,13 +44,10 @@ export default function goals(state: GoalsReducer = initialState, action: any) {
         ...state,
         isLoading: true,
       };
-    case COMPLETE_GOAL_SUCCESS:
     case COMPLETE_GOAL_FAILED:
-    case FAIL_GOAL_SUCCESS:
     case FAIL_GOAL_FAILED:
     case CREATE_GOAL_FAILED:
     case UPDATE_GOAL_FAILED:
-    case DELETE_GOAL_SUCCESS:
     case DELETE_GOAL_FAILED:
     case GET_GOALS_FAILED:
       return {
@@ -64,12 +61,53 @@ export default function goals(state: GoalsReducer = initialState, action: any) {
         goals: [...data.goals],
       };
     case CREATE_GOAL_SUCCESS:
-    case UPDATE_GOAL_SUCCESS:
       return {
         ...state,
         isLoading: false,
         goals: [...state.goals, data.goal],
       };
+    case UPDATE_GOAL_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        goals: [...state.goals.map(itm => {
+          return itm.id === data.goal.id
+            ? data.goal : itm;
+        })],
+      };
+    }
+    case DELETE_GOAL_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        goals: [...state.goals.filter(itm => itm.id !== data.goalId)]
+      };
+    case FAIL_GOAL_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        goals: [...state.goals.map(itm => {
+          return itm.id === data.goalId
+            ? {
+              ...itm,
+              status: GoalStatuses.Failed,
+            } : itm;
+        })],
+      };
+    }
+    case COMPLETE_GOAL_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        goals: [...state.goals.map(itm => {
+          return itm.id === data.goalId
+            ? {
+              ...itm,
+              status: GoalStatuses.Completed,
+            } : itm;
+        })],
+      };
+    }
     default:
       return state;
   }

@@ -14,5 +14,16 @@
   min-height: 100vh;
   padding: 0;
   will-change: left;
-  transition: all 0.15s linear;
+  transition: all 1s linear;
+}
+
+.sideBarClosed {
+  padding-right: 60px;
+}
+
+.sideBarOpen {
+  padding-right: 150px;
+}
+.sideBarClosed, .sideBarOpen {
+  transition: all 1s ease;
 }

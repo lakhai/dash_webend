@@ -90,7 +90,7 @@ class Auth extends React.Component<Props, State> {
         })
           .then(({ data: { accessToken } }) => {
             localStorage.setItem('accessToken', accessToken);
-            this.setState({ isLoading: false }, () => this.props.history.push('/'));
+            this.setState({ isLoading: false }, () => this.props.history.push('/dashboard'));
           })
           .catch(err => {
             this.setState({ isLoading: false });

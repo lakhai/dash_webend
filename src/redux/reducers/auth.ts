@@ -1,7 +1,7 @@
 import * as types from '../constants';
 import { User } from 'src/models';
 
-interface State {
+export interface State {
   isLoading: boolean;
   accessToken: string | null;
   isLoggedIn: boolean;
@@ -18,6 +18,7 @@ const authReducer = (state: State = initialState, action: any): State => {
   const { type, data } = action;
   switch (type) {
     case types.GET_TOKEN:
+    case types.GET_USER_INFO:
       return {
         ...state,
         isLoading: true,
@@ -31,6 +32,12 @@ const authReducer = (state: State = initialState, action: any): State => {
         ...state,
         isLoading: false,
         accessToken: data.accessToken,
+      };
+    case types.GET_USER_INFO_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        currentUser: data.user,
       };
     default: return state;
   }

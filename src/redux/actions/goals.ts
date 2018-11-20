@@ -18,6 +18,7 @@ import {
   FAIL_GOAL_FAILED,
   FAIL_GOAL_SUCCESS,
 } from '../constants';
+import { AuthActions } from './auth';
 import { Goals } from 'src/api';
 import { CreateGoalDto, UpdateGoalDto } from 'src/models';
 
@@ -45,21 +46,27 @@ const updateGoal = (id: number, data: UpdateGoalDto) => dispatch => {
 const deleteGoal = (id: number) => dispatch => {
   dispatch({ type: DELETE_GOAL });
   Goals.deleteGoal(id)
-    .then(() => dispatch({ type: DELETE_GOAL_SUCCESS }))
+    .then(() => dispatch({ type: DELETE_GOAL_SUCCESS, data: { goalId: id } }))
     .catch(error => dispatch({ type: DELETE_GOAL_FAILED, data: { error } }));
 };
 
 const completeGoal = (id: number) => dispatch => {
   dispatch({ type: COMPLETE_GOAL });
   Goals.completeGoal(id)
-    .then(() => dispatch({ type: COMPLETE_GOAL_SUCCESS }))
+    .then(() => {
+      dispatch({ type: COMPLETE_GOAL_SUCCESS, data: { goalId: id } });
+      dispatch(AuthActions.getUserInfo());
+    })
     .catch(error => dispatch({ type: COMPLETE_GOAL_FAILED, data: { error } }));
 };
 
 const failGoal = (id: number) => dispatch => {
   dispatch({ type: FAIL_GOAL });
   Goals.failGoal(id)
-    .then(() => dispatch({ type: FAIL_GOAL_SUCCESS }))
+    .then(() => {
+      dispatch({ type: FAIL_GOAL_SUCCESS, data: { goalId: id } });
+      dispatch(AuthActions.getUserInfo());
+    })
     .catch(error => dispatch({ type: FAIL_GOAL_FAILED, data: { error } }));
 };
 
