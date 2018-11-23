@@ -23,6 +23,8 @@ import Goals from '../Goals';
 
 import './styles.css';
 import { isNullOrUndefined } from 'util';
+import Quests from '../Quests';
+import Journal from '../Journal';
 
 interface Props {
   history: any;
@@ -60,6 +62,8 @@ class DashboardLayout extends React.Component<Props, State> {
             <Segment basic={true}>
               <PrivateRoute exact={true} path="/dashboard/" component={Dashboard} />
               <PrivateRoute exact={true} path="/dashboard/goals" component={Goals} />
+              <PrivateRoute exact={true} path="/dashboard/quests" component={Quests} />
+              <PrivateRoute exact={true} path="/dashboard/journal" component={Journal} />
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>

@@ -13,7 +13,8 @@ export interface Props {
 class TopNavigation extends React.Component<Props, {}> {
   shouldComponentUpdate(nextProps: Props) {
     return (
-      nextProps.authState.isLoading !== this.props.authState.isLoading
+      nextProps.authState.isLoading !== this.props.authState.isLoading ||
+      nextProps.authState.currentUser !== this.props.authState.currentUser
     );
   }
   render() {
@@ -25,13 +26,12 @@ class TopNavigation extends React.Component<Props, {}> {
     return (
       <Menu inverted={true} stackable={true} fluid={true} style={{ borderRadius: '0', marginBottom: '0' }}>
         <Menu.Item>
-          <Button circular={true} onClick={() => this.props.toggleSidebar()} icon={true} color="teal" >
+          <Button onClick={() => this.props.toggleSidebar()} color="teal" >
             <Icon name="compass outline" size="big" />
+            Dashboard
           </Button>
         </Menu.Item>
-        <Menu.Item name="home">Home</Menu.Item>
-        <Menu.Item name="Thing">Thing</Menu.Item>
-        <Menu.Item name="user">{userText}</Menu.Item>
+        <Menu.Item position="right" name="user">{userText}</Menu.Item>
       </Menu>
     );
   }

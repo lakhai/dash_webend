@@ -4,9 +4,11 @@
   "private": true,
   "homepage": "https://lakhai.github.io/dash_webend",
   "dependencies": {
+    "@types/draft-js": "^0.10.26",
     "@types/redux-logger": "^3.0.6",
     "axios": "^0.18.0",
     "copy-to-clipboard": "^3.0.8",
+    "draft-js": "^0.10.5",
     "history": "^4.7.2",
     "leven": "^2.1.0",
     "lodash": "^4.17.11",

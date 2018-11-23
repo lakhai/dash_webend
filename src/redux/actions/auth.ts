@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as actions from '../constants';
-import { LoginDto } from '../../models';
-import { User } from 'src/api/user';
+import { LoginDto, User } from '../../models';
+import { User as UserAPI } from 'src/api/user';
 
 const getToken = (user: LoginDto) => dispatch => {
   dispatch({ type: actions.GET_TOKEN });
@@ -18,14 +18,17 @@ const getToken = (user: LoginDto) => dispatch => {
 
 const logOut = () => ({ type: actions.LOGOUT });
 
+const updateUserInfo = (user: User) => dispatch => dispatch({ type: actions.GET_USER_INFO_SUCCESS, data: { user } });
+
 const getUserInfo = () => dispatch => {
   dispatch({ type: actions.GET_USER_INFO });
-  User.getUserInfo()
-    .then(user => dispatch({ type: actions.GET_USER_INFO_SUCCESS, data: { user } }))
+  UserAPI.getUserInfo()
+    .then(user => dispatch(updateUserInfo(user)))
     .catch(error => dispatch({ type: actions.GET_USER_INFO_FAILED, data: { error } }));
 };
 
 export const AuthActions = {
   getToken,
   getUserInfo,
+  updateUserInfo,
 };
