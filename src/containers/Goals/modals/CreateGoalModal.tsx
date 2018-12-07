@@ -1,16 +1,20 @@
 import * as React from 'react';
-import { get, cloneDeep } from 'lodash';
+import { get, includes, cloneDeep } from 'lodash';
 import {
   Modal,
   Button,
   Icon,
   Header,
   Form,
+  List,
+  Card,
+  Label,
 } from 'semantic-ui-react';
-import { UpdateGoalDto, CreateGoalDto, Goal } from 'src/models';
+import { UpdateGoalDto, CreateGoalDto, Goal, Quest } from 'src/models';
 
 export interface State extends CreateGoalDto {
-
+  questSearch: string;
+  selectedQuests: Quest[];
 }
 
 export interface Props {
@@ -27,6 +31,8 @@ class CreateGoalModal extends React.Component<Props, State> {
     title: '',
     description: '',
     awards: 0,
+    questSearch: '',
+    selectedQuests: [],
   };
 
   form: any = null;
@@ -54,26 +60,46 @@ class CreateGoalModal extends React.Component<Props, State> {
       ? this.props.selectedGoal.title : 'Add Goal';
   }
 
-  onChangeForm = e => {
-    const { name, value } = get(e, 'target', {});
-    this.setState(prevState => {
-      const state = cloneDeep(prevState);
+  onChangeForm = (e, { name, value }) => {
+    this.setState(state => {
       switch (name) {
         case 'title':
-          state.title = value;
-          break;
+          return {
+            ...state,
+            title: value,
+          };
         case 'description':
-          state.description = value;
-          break;
+          return {
+            ...state,
+            description: value,
+          };
         case 'awards':
-          state.awards = +value;
-          break;
+          return {
+            ...state,
+            awards: +value,
+          };
         default:
-          break;
+          return state;
       }
-      return state;
     });
   }
+
+  onChangeQuestSearch = questSearch => {
+    this.setState({ questSearch });
+  }
+
+  onSelectQuest = (quest: Quest) => this.setState(state => {
+    if (includes(state.selectedQuests, quest)) {
+      return {
+        ...state,
+        selectedQuests: state.selectedQuests.filter(itm => itm.id !== quest.id),
+      };
+    }
+    return {
+      ...state,
+      selectedQuests: [...state.selectedQuests, quest],
+    };
+  })
 
   onSubmit = () => {
     this.props.onSubmit(this.state);
@@ -84,6 +110,8 @@ class CreateGoalModal extends React.Component<Props, State> {
       title,
       description,
       awards,
+      questSearch,
+      selectedQuests,
     } = this.state;
     return (
       <Modal

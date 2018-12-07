@@ -54,26 +54,27 @@ class CreateQuestModal extends React.Component<Props, State> {
       ? this.props.selected.name : 'Add Quest';
   }
 
-  onChangeForm = e => {
-    const { name, value } = get(e, 'target', {});
-    this.setState(prevState => {
-      const state = cloneDeep(prevState);
-      switch (name) {
-        case 'name':
-          state.name = value;
-          break;
-        case 'description':
-          state.description = value;
-          break;
-        case 'currentDifficulty':
-          state.currentDifficulty = +value;
-          break;
-        default:
-          break;
-      }
-      return state;
-    });
-  }
+  onChangeForm = (e, { name = '', value = '' }) => this.setState(state => {
+    switch (name) {
+      case 'name':
+        return {
+          ...state,
+          name: value,
+        };
+      case 'description':
+        return {
+          ...state,
+          description: value,
+        };
+      case 'currentDifficulty':
+        return {
+          ...state,
+          currentDifficulty: +value,
+        };
+      default:
+        return state;
+    }
+  })
 
   onSubmit = () => {
     this.props.onSubmit(this.state);

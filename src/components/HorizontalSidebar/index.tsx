@@ -35,6 +35,14 @@ class HorizontalSidebar extends React.Component<Props, {}> {
           <Icon size="small" name="home" />
           {isOpen && 'Home'}
         </Menu.Item>
+        <Menu.Item name="profile" href="/dashboard/profile">
+          <Icon size="small" name="user" />
+          {isOpen && 'Profile'}
+        </Menu.Item>
+        <Menu.Item name="song-book" href="/dashboard/song-book">
+          <Icon size="small" name="music" />
+          {isOpen && 'Song Book'}
+        </Menu.Item>
         <Menu.Item name="quests" href="/dashboard/quests">
           <Icon size="small" name="trophy" />
           {isOpen && 'Quests'}
@@ -46,6 +54,10 @@ class HorizontalSidebar extends React.Component<Props, {}> {
         <Menu.Item name="journal" href="/dashboard/journal">
           <Icon size="small" name="book" />
           {isOpen && 'Journal'}
+        </Menu.Item>
+        <Menu.Item name="feeds" href="/dashboard/feeds">
+          <Icon size="small" name="rss" />
+          {isOpen && 'Feeds'}
         </Menu.Item>
         <Menu.Item name="logout" onClick={() => logout()}>
           <Icon size="small" name="log out" />

@@ -64,23 +64,22 @@ class JournalEntryModal extends React.Component<Props, State> {
 
   onChangeEditor = (editorState: EditorState) => this.setState({ editorState });
 
-  onChangeForm = e => {
-    const { name, value } = get(e, 'target', {});
-    this.setState(prevState => {
-      const state = cloneDeep(prevState);
-      switch (name) {
-        case 'title':
-          state.title = value;
-          break;
-        case 'body':
-          state.body = value;
-          break;
-        default:
-          break;
-      }
-      return state;
-    });
-  }
+  onChangeForm = e => this.setState(state => {
+    switch (e.target.name) {
+      case 'title':
+        return {
+          ...state,
+          title: e.target.value,
+        };
+      case 'body':
+        return {
+          ...state,
+          body: e.target.value,
+        };
+      default:
+        return state;
+    }
+  })
 
   onSubmit = () => {
     this.props.onSubmit(this.state);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   Container,
@@ -34,4 +35,4 @@ class Dashboard extends React.Component<Props, {}> {
     );
   }
 }
-export default withRouter(Dashboard);
+export default withRouter(connect(null, null)(Dashboard));

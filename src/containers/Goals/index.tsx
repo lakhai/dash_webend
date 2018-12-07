@@ -178,4 +178,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ ...GoalsActions }, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Goals));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Goals));

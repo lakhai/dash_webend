@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import * as moment from 'moment';
 import {
   Dropdown,
@@ -13,59 +13,56 @@ import {
   Card,
 } from 'semantic-ui-react';
 
-import { JournalEntry, CreateJournalEntryDto, UpdateJournalEntryDto } from 'src/models';
-import { JournalActions } from 'src/redux/actions';
+import { Feed, CreateFeedDto, UpdateFeedDto } from 'src/models';
+import { FeedsActions } from 'src/redux/actions';
 import { bindActionCreators } from 'redux';
-import JournalEntryModal from 'src/modals/JournalEntryModal';
-import { DateTime } from 'src/constants';
+import FeedModal from 'src/modals/FeedModal';
 
 interface Props {
   history: any;
-  actions: any;
+  actions: FeedsActions;
   isLoading: boolean;
-  entries: JournalEntry[];
+  feeds: Feed[];
+  id: number;
 }
 
 interface State {
   isModalOpen: boolean;
   contextRef: any;
-  selectedEntry: UpdateJournalEntryDto | null;
+  selectedFeed: UpdateFeedDto | null;
 }
 
-class Journal extends React.Component<Props, State> {
+class Feeds extends React.Component<Props, State> {
   state = {
     isModalOpen: false,
     contextRef: undefined,
-    selectedEntry: {
-      title: '',
-      body: '',
-    },
+    selectedFeed: null,
   };
 
   componentDidMount() {
     this.fetch();
   }
 
-  addEntry = () => this.setState({ selectedEntry: null }, this.openModal);
+  addFeed = () => this.setState({ selectedFeed: null }, this.openModal);
 
-  fetch = () => this.props.actions.getJournal();
+  fetch = () => this.props.actions.getFeeds();
 
   handleContextRef = contextRef => this.setState({ contextRef });
 
-  handleModifyEntry = selectedEntry => this.setState({ selectedEntry, isModalOpen: true });
+  handleModifyFeed = selectedFeed => this.setState({ selectedFeed, isModalOpen: true });
 
-  handleDeleteEntry = id => {
-    this.props.actions.deleteEntry(id);
+  handleDeleteFeed = id => {
+    this.props.actions.deleteFeed(id);
   }
 
-  handleModalSubmit = (entry: CreateJournalEntryDto | UpdateJournalEntryDto) => {
+  handleModalSubmit = (entry: CreateFeedDto | UpdateFeedDto) => {
     const {
-      selectedEntry,
+      selectedFeed,
     } = this.state;
-    if (selectedEntry) {
-      return this.props.actions.updateEntry(get(selectedEntry, 'id'), entry);
+    if (selectedFeed) {
+      return this.props.actions.updateFeed(get(selectedFeed, 'id', 0), entry);
     }
-    return this.props.actions.createEntry(entry);
+    return this.props.actions.createFeed(entry as CreateFeedDto);
   }
 
   openModal = () => this.setState({ isModalOpen: true });
@@ -75,31 +72,29 @@ class Journal extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props) {
     if (
       nextProps.isLoading !== this.props.isLoading ||
-      nextProps.entries.length !== this.props.entries.length
+      nextProps.feeds.length !== this.props.feeds.length
     ) {
-      this.setState({});
+      this.forceUpdate();
     }
   }
 
   render() {
-    const { isModalOpen, contextRef, selectedEntry } = this.state;
-    const { isLoading, entries } = this.props;
+    const { isModalOpen, contextRef, selectedFeed } = this.state;
+    const { isLoading, feeds } = this.props;
     return (
       <Segment loading={isLoading} basic={true} ref={this.handleContextRef}>
-
-        <JournalEntryModal
-          isOpen={isModalOpen}
+        <FeedModal
           isLoading={isLoading}
-          selected={selectedEntry}
-          onSubmit={this.handleModalSubmit}
+          selected={selectedFeed}
+          isOpen={isModalOpen}
           handleOpen={this.openModal}
           handleClose={this.closeModal}
+          onSubmit={this.handleModalSubmit}
         />
-
         <Header as="h2" textAlign="left">
           <Header.Content>
-            <Icon color="teal" name="book" circular={true} />
-            Journal
+            <Icon color="teal" name="rss" circular={true} />
+            Feeds
           </Header.Content>
         </Header>
         <Sticky context={contextRef}>
@@ -107,21 +102,21 @@ class Journal extends React.Component<Props, State> {
             <Button onClick={this.fetch} circular={true} icon={true}>
               <Icon name="sync" />
             </Button>
-            <Button onClick={this.addEntry} circular={true} icon={true}>
+            <Button onClick={this.addFeed} circular={true} icon={true}>
               <Icon name="add" />
             </Button>
           </Button.Group>
         </Sticky>
         <Card.Group centered={true}>
           {
-            entries.map((entry: JournalEntry) => {
-              const handleModify = () => this.handleModifyEntry(entry);
-              const handleDelete = () => this.handleDeleteEntry(entry.id);
+            feeds.map((feed: Feed) => {
+              const handleModify = () => this.handleModifyFeed(feed);
+              const handleDelete = () => this.handleDeleteFeed(feed.id);
               return (
-                <Card key={`card_${entry.id}`} fluid={true}>
+                <Card key={`card_${feed.id}`} fluid={true}>
                   <Card.Content>
                     <Card.Header as="h2">
-                      {entry.title}
+                      <Link to={`feeds/${feed.id}`}>{feed.alias || 'Feed'}</Link>
                       <Button.Group floated="right">
                         <Button onClick={handleModify} icon={true}>
                           <Icon size="small" name="edit" /> Edit
@@ -132,11 +127,11 @@ class Journal extends React.Component<Props, State> {
                       </Button.Group>
                     </Card.Header>
                     <Card.Meta>
-                      {moment(entry.created).format(DateTime.fullDisplayDateTime)}
+                      {moment(feed.created).format('dddd, MMMM Do - hh:mm A')}
                     </Card.Meta>
                   </Card.Content>
                   <Card.Content>
-                    {entry.body}
+                    {feed.url}
                   </Card.Content>
                 </Card>
               );
@@ -148,10 +143,10 @@ class Journal extends React.Component<Props, State> {
   }
 }
 const mapStateToProps = state => ({
-  isLoading: state.journal.isLoading,
-  entries: state.journal.entries,
+  isLoading: state.feeds.isLoading,
+  feeds: state.feeds.feeds,
 });
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ ...JournalActions }, dispatch),
+  actions: bindActionCreators({ ...FeedsActions }, dispatch),
 });
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journal));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Feeds));

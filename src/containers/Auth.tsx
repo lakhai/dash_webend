@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -223,4 +224,4 @@ class Auth extends React.Component<Props, State> {
     );
   }
 }
-export default withRouter(Auth);
+export default withRouter(connect(null, null)(Auth));

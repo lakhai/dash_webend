@@ -152,4 +152,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ ...QuestsActions }, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Quests));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Quests));

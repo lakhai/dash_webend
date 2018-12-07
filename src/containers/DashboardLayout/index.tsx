@@ -25,6 +25,10 @@ import './styles.css';
 import { isNullOrUndefined } from 'util';
 import Quests from '../Quests';
 import Journal from '../Journal';
+import Profile from '../Profile';
+import Feeds from '../Feeds';
+import Feed from '../Feed';
+import SongBook from '../SongBook';
 
 interface Props {
   history: any;
@@ -61,9 +65,14 @@ class DashboardLayout extends React.Component<Props, State> {
           <Sidebar.Pusher className={pusherClass}>
             <Segment basic={true}>
               <PrivateRoute exact={true} path="/dashboard/" component={Dashboard} />
+              <PrivateRoute exact={true} path="/dashboard/" component={Dashboard} />
               <PrivateRoute exact={true} path="/dashboard/goals" component={Goals} />
               <PrivateRoute exact={true} path="/dashboard/quests" component={Quests} />
               <PrivateRoute exact={true} path="/dashboard/journal" component={Journal} />
+              <PrivateRoute path="/dashboard/feeds/:id" component={Feed} />
+              <PrivateRoute exact={true} path="/dashboard/feeds" component={Feeds} />
+              <PrivateRoute exact={true} path="/dashboard/profile" component={Profile} />
+              <PrivateRoute exact={true} path="/dashboard/song-book" component={SongBook} />
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
@@ -74,4 +83,4 @@ class DashboardLayout extends React.Component<Props, State> {
 const mapDispatchToProps = dispatch => ({
   getUserInfo: () => dispatch(AuthActions.getUserInfo()),
 });
-export default connect(null, mapDispatchToProps)(withRouter(DashboardLayout));
+export default withRouter(connect(null, mapDispatchToProps)(DashboardLayout));

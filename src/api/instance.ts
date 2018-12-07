@@ -5,8 +5,8 @@ const headers: any = {
 };
 let axiosInstance: AxiosInstance | null = null;
 
-// export const BASEURL = 'http://104.248.6.125:3001/';
-export const BASEURL = 'http://104.248.6.125:3001/';
+// export const BASEURL = 'http://localhost:3001/';
+export const BASEURL = 'http://localhost:3001/';
 
 export const getApiInstance = async () => {
   if (!axiosInstance) {
