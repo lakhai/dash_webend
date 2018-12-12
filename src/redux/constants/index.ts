@@ -4,4 +4,4 @@ export * from './quests';
 export * from './journal';
 export * from './feeds';
 
-export const BASE_URL = process.env.API_URL;
+export const BASE_URL = process.env.REACT_APP_API_URL;
