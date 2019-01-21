@@ -8,7 +8,9 @@ import {
   Icon,
   Button,
   Form,
+  Card,
 } from 'semantic-ui-react';
+import Chord, { ChordProps } from '@/components/SongBook/Chord';
 // hasta esta linea importo materiales, librerias, etc.
 
 // de ahora en delante voy a definir mis interfaces, las interfaces son un basicamente un modelo
@@ -69,6 +71,7 @@ interface Song {
 
 interface State { // el estado interno que va a manejar el componente
   song: Song;
+  chords: ChordProps[];
 }
 
 interface Props {
@@ -87,13 +90,29 @@ class SongBook extends React.Component<Props, State> {
     // imaginate que esto es solamente la parte del medio de la pagina,
     // por ejemplo donde estan todos los "Goals" y podes ir agregando, en ese caso lo arranco con un array de Goal vacio
     // pero aca van a ir armandose los temas
+    chords: [],
     song: {
       name: 'Tu Prima En Tanga',
       sections: [],
     }, // arranca como un array vacio, el usuario lo llenara como quiera
   };
 
-  addSong() {
+  componentDidMount() {
+    this.addChord();
+  }
+
+  addChord = () => {
+    this.setState(state => ({
+      chords: [...state.chords, {
+        strings: 6,
+        frets: 5,
+        name: '',
+        isEditing: true,
+      } as ChordProps]
+    }));
+  }
+
+  addSong = () => {
     // TODO
   }
 
@@ -118,14 +137,28 @@ class SongBook extends React.Component<Props, State> {
             </Header.Subheader>
           </Header.Content>
         </Header>
-        <Sticky context={this.contextRef}>
-          <Button.Group className="btnGroupResourceOptions" floated="right" vertical={true}>
+        <Segment attached="top">
+          <Button.Group className="btnGroupResourceOptions">
             <Button onClick={this.addSong} circular={true} icon={true}>
               <Icon name="add" />
             </Button>
+            <Button onClick={this.addChord} circular={true}>
+              <Icon name="add" />
+              Agregar Acorde
+            </Button>
           </Button.Group>
-        </Sticky>
-        <Segment>
+        </Segment>
+        <Chord
+          isEditing={true}
+        />
+        <Card.Group centered={true}>
+          {
+            this.state.chords.map((props: ChordProps, index) => (
+              <Chord key={`chord_card_${props.name || ''}_${index}`} {...props} />
+            ))
+          }
+        </Card.Group>
+        <Segment >
           <Form onSubmit={this.addSectionToSong}>
             <Form.Input
               type="text"

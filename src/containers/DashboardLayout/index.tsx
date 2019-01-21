@@ -10,7 +10,7 @@ import { AuthActions } from '@/redux/actions';
 
 import TopNavigation from '@/components/Common/TopNavigation';
 import HorizontalSidebar from '@/components/Common/HorizontalSidebar';
-import PrivateRoute from '@/components/Core/PrivateRoute';
+import PrivateRoute from '@/components/Common/PrivateRoute';
 import Dashboard from '../Dashboard';
 import Goals from '../Goals';
 import Quests from '../Quests';
@@ -22,6 +22,7 @@ import SongBook from '../SongBook';
 import Economy from '../Economy';
 import Savings from '../Savings';
 import './styles.css';
+import FearSetting from '../FearSetting';
 
 interface Props {
   history: any;
@@ -60,6 +61,7 @@ class DashboardLayout extends React.Component<Props, State> {
               <PrivateRoute exact={true} path="/dashboard/" component={Dashboard} />
               <PrivateRoute exact={true} path="/dashboard/" component={Dashboard} />
               <PrivateRoute exact={true} path="/dashboard/goals" component={Goals} />
+              <PrivateRoute exact={true} path="/dashboard/fear-setting" component={FearSetting} />
               <PrivateRoute exact={true} path="/dashboard/quests" component={Quests} />
               <PrivateRoute exact={true} path="/dashboard/journal" component={Journal} />
               <PrivateRoute path="/dashboard/feeds/:id" component={Feed} />

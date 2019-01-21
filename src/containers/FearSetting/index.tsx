@@ -16,6 +16,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 import MoneyTransactionModal from '@/modals/MoneyTransactionModal';
+import StepModal from '@/components/Common/StepModal';
 
 interface Props {
   history: any;
@@ -32,10 +33,10 @@ interface CurrentEconomy {
   money: number;
 }
 
-class Economy extends React.Component<Props, State> {
-  stickyRef;
+class FearSetting extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
     const money = Number(localStorage.getItem('money')) || 0;
     const transactions: Transaction[] = JSON.parse(localStorage.getItem('transactions') || '[]') || [];
     this.state = {
@@ -44,7 +45,7 @@ class Economy extends React.Component<Props, State> {
         ...itm,
         date: moment(itm.date),
       })),
-      isModalOpen: false,
+      isModalOpen: true,
       selectedTransaction: null,
     };
   }
@@ -52,6 +53,7 @@ class Economy extends React.Component<Props, State> {
   get money() {
     return this.getTotalMoney(this.state.transactions, 0);
   }
+
   getTotalMoney(transactions: Transaction[], base: number = 0): number {
     return transactions.reduce((money, trans) => {
       const isNeg = +trans.amount < 0;
@@ -118,75 +120,32 @@ class Economy extends React.Component<Props, State> {
   render() {
     const {
       isModalOpen,
-      money,
       transactions,
-      selectedTransaction,
     } = this.state;
     return (
-      <Segment basic={true} ref={ref => { this.stickyRef = ref; }}>
-        <MoneyTransactionModal
+      <Segment basic={true}>
+        <StepModal
           isOpen={isModalOpen}
-          isLoading={false}
-          onSubmit={this.handleSubmit}
+          onFinished={this.closeModal}
           handleOpen={this.showModal}
           handleClose={this.closeModal}
         />
         <Header as="h2" textAlign="left">
           <Header.Content>
-            <Icon color="teal" name="money bill alternate outline" circular={true} />
-            Economía
+            <Icon color="teal" name="heartbeat" circular={true} />
+            Fear Setting
           </Header.Content>
           <Header.Subheader>
-            Para anotar transacciones de ingresos y gastos, y para gestionar metas de ahorro, madafaca.
+            Fear setting for stuff
           </Header.Subheader>
         </Header>
-        <Sticky context={this.stickyRef}>
+        <Sticky>
           <Button.Group className="btnGroupResourceOptions" floated="right" vertical={true}>
             <Button onClick={this.showModal} circular={true} icon={true}>
               <Icon name="add" />
             </Button>
           </Button.Group>
         </Sticky>
-        <Card fluid={true} centered={true}>
-          <Card.Content textAlign="center">
-            <h2>{`Tu economía actual es de: $ ${this.money}`}</h2>
-          </Card.Content>
-        </Card>
-        <Feed>
-          {
-            transactions.map(itm => {
-              const isNeg = +itm.amount < 0;
-              const onDelete = () => this.deleteTransaction(itm.id);
-              const header = (
-                <React.Fragment>
-                  <span style={{ maxWidth: '90%' }}>{itm.description}</span>
-                  <Button floated="right" onClick={onDelete} icon="delete" basic={true} style={{ marginLeft: '10px' }} compact={true} />
-                </React.Fragment>
-              );
-              const message = !isNeg
-                ? (
-                  <Message
-                    success={true}
-                    icon="plus circle"
-                    header={header}
-                    content={`Ingreso de $ ${+itm.amount} - ${itm.date.fromNow()}`}
-                  />
-                ) : (
-                  <Message
-                    error={true}
-                    icon="minus circle"
-                    header={header}
-                    content={`Gasto de $ ${Math.abs(itm.amount)} - ${itm.date.fromNow()}`}
-                  />
-                );
-              return (
-                <Feed.Event key={`feed_${itm.id}`}>
-                  <Feed.Content>{message}</Feed.Content>
-                </Feed.Event>
-              );
-            })
-          }
-        </Feed>
       </Segment>
     );
   }
@@ -195,4 +154,4 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
 });
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Economy));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FearSetting));

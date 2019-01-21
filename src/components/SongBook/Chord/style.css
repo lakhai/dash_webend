@@ -1,0 +1,47 @@
+.chordCell {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+.cellState {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  top: calc(50% - 10px);
+  left: calc(50% - 10px);
+}
+
+.stringState {
+  top: 50%;
+  right: 0;
+  opacity: .5;
+  cursor: pointer;
+  position: absolute;
+}
+
+.cellState.active {
+  background: red;
+}
+
+.chordFret {
+  padding: 0;
+  height: 29px;
+  width: 50px !important;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+}
+
+.chordString:last-child .chordFret {
+  border-left: none;
+}
+.chordString:not(:last-child) .chordFret:last-child {
+  border-right: 1px solid black;
+}
+
+.chordString {
+  padding: 0 !important;
+}

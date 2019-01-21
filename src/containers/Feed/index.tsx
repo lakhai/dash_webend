@@ -61,7 +61,7 @@ class Feed extends React.Component<Props, State> {
       this.setState({ isLoading: true }, () => {
         const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
         this.parser.parseURL(CORS_PROXY + selectedFeed.url, (error, feed) => {
-          console.log(error, feed);
+
           this.setState({ isLoading: false, feedContent: feed });
         });
       });
