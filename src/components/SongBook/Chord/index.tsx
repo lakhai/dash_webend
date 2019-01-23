@@ -90,7 +90,7 @@ const getNote = (note: ActiveNote): string => {
   return selectedString ? selectedString[fret] : '';
 };
 
-class PureChord extends React.PureComponent<PureChordProps> {
+export class PureChord extends React.PureComponent<PureChordProps> {
   render() {
     const { activeNotes, strings = 6, frets = 5 } = this.props;
     return (
@@ -134,11 +134,11 @@ class Chord extends React.Component<ChordProps, ChordState> {
     const activeNotes = props.activeNotes || [];
     const isEditing = props.isEditing || false;
     this.state = {
-      isMidiReady: false,
-      midiRef: null,
-      isEditing: false,
-      chordName: name,
+      isEditing,
       activeNotes,
+      midiRef: null,
+      chordName: name,
+      isMidiReady: false,
     };
   }
 
