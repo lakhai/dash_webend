@@ -23,6 +23,7 @@ import Economy from '../Economy';
 import Savings from '../Savings';
 import './styles.css';
 import FearSetting from '../FearSetting';
+import Evaluation from '../Evaluation';
 
 interface Props {
   history: any;
@@ -70,6 +71,7 @@ class DashboardLayout extends React.Component<Props, State> {
               <PrivateRoute exact={true} path="/dashboard/song-book" component={SongBook} />
               <PrivateRoute exact={true} path="/dashboard/economy" component={Economy} />
               <PrivateRoute exact={true} path="/dashboard/savings" component={Savings} />
+              <PrivateRoute exact={true} path="/dashboard/evaluation" component={Evaluation} />
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>

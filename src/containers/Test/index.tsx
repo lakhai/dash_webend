@@ -11,18 +11,25 @@ import {
   Container,
 } from 'semantic-ui-react';
 import Chord from '@/components/SongBook/Chord';
+import SongBook from '../SongBook';
 
 interface Props {
 }
 
 interface State {
+  texto: string;
 }
 
 class TestContainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      texto: '',
     };
+  }
+
+  concha = () => {
+    this.setState({ texto: 'concha' });
   }
 
   render() {
@@ -30,13 +37,10 @@ class TestContainer extends React.Component<Props, State> {
     } = this.state;
     return (
       <Container>
-        <Header
-          as="h1"
-          textAlign="left"
-          content="Testing the shits"
-        />
-        <Chord
-          isEditing={true}
+        <h1>{this.state.texto}</h1>
+        <Button
+          onClick={this.concha}
+          label="hacer cosas"
         />
       </Container>
     );

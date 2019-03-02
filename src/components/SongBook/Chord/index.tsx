@@ -1,33 +1,24 @@
 import * as React from 'react';
-import { css } from 'aphrodite';
+import { css } from 'aphrodite/no-important';
 import { times, some } from 'lodash';
 import MIDISounds from 'midi-sounds-react';
 import {
-  Grid, StrictGridProps, Header, Card, Sticky, Button, Input,
+  Header, Card, Button, Input,
 } from 'semantic-ui-react';
 
-import './style.css';
+import styles from './styles';
 
 const ChordCell = (props: {
+  style?: any,
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void,
   isActive: boolean,
 }) => {
-  const className = props.isActive ? 'cellState active' : 'cellState';
-  return (
-    <div className="chordCell">
-      <div onClick={props.onClick} className={className} />
-    </div>
+  const className = css(
+    styles.cell,
+    props.isActive && styles.cellActive,
   );
-};
-
-const OpenStringCell = (props: {
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void,
-  isMuted: boolean,
-  isActive: boolean
-}) => {
-  const className = props.isActive ? 'cellState active' : 'cellState';
   return (
-    <div className="chordCell">
+    <div className={css(styles.fret, !!props.style && props.style)}>
       <div onClick={props.onClick} className={className} />
     </div>
   );
@@ -38,10 +29,17 @@ export interface ChordProps {
   isEditing?: boolean;
   strings?: number;
   frets?: number;
+  onDelete: () => void;
+  onChange: (props: ChordEditableFields) => void;
   activeNotes?: ActiveNote[];
 }
 
-interface ActiveNote {
+export interface ChordEditableFields {
+  name?: string;
+  activeNotes?: ActiveNote[];
+}
+
+export interface ActiveNote {
   string: number;
   fret: number;
 }
@@ -60,28 +58,11 @@ export interface PureChordProps {
   activeNotes: ActiveNote[];
   strings: number;
   frets: number;
+  firstFret: number;
   onClickCell: (e: React.MouseEvent<HTMLDivElement>, cell: ActiveNote) => void;
 }
 
 const stringNotes = {
-  6: [
-    'F',
-    'Gb',
-    'G',
-    'Ab',
-    'A',
-    'Bb',
-    'B',
-  ],
-  5: [
-    'Bb',
-    'B',
-    'C',
-    'Db',
-    'D',
-    'Eb',
-    'E',
-  ],
 };
 
 const getNote = (note: ActiveNote): string => {
@@ -94,34 +75,31 @@ export class PureChord extends React.PureComponent<PureChordProps> {
   render() {
     const { activeNotes, strings = 6, frets = 5 } = this.props;
     return (
-      <div>
-        <Grid centered={true}>
-          {
-            times(strings, stringNumber => (
-              <Grid.Row className="chordString">
-                {
-                  times(frets, fret => {
-                    const isNoteActive = activeNotes.find(itm => itm.fret === fret && itm.string === stringNumber);
-                    const note = {
-                      fret,
-                      string: stringNumber,
-                    } as ActiveNote;
-                    const onClick = this.props.canEdit
-                      ? e => this.props.onClickCell(e, note) : () => null;
-                    return (
-                      <Grid.Column className="chordFret">
-                        <ChordCell
-                          onClick={onClick}
-                          isActive={!!isNoteActive}
-                        />
-                      </Grid.Column>
-                    );
-                  })
-                }
-              </Grid.Row>
-            ))
-          }
-        </Grid>
+      <div className={css(styles.container)}>
+        {
+          times(strings, stringNumber => (
+            <div className={css(styles.string)}>
+              {
+                times(frets, fret => {
+                  const isNoteActive = activeNotes.find(itm => itm.fret === fret && itm.string === stringNumber);
+                  const note = {
+                    fret,
+                    string: stringNumber,
+                  } as ActiveNote;
+                  const onClick = this.props.canEdit
+                    ? e => this.props.onClickCell(e, note) : () => null;
+                  return (
+                    <ChordCell
+                      style={strings === (stringNumber + 1) && styles.lastFret}
+                      onClick={onClick}
+                      isActive={!!isNoteActive}
+                    />
+                  );
+                })
+              }
+            </div>
+          ))
+        }
       </div>
     );
   }
@@ -132,9 +110,8 @@ class Chord extends React.Component<ChordProps, ChordState> {
     super(props);
     const name = props.name || '';
     const activeNotes = props.activeNotes || [];
-    const isEditing = props.isEditing || false;
     this.state = {
-      isEditing,
+      isEditing: props.isEditing || false,
       activeNotes,
       midiRef: null,
       chordName: name,
@@ -144,9 +121,29 @@ class Chord extends React.Component<ChordProps, ChordState> {
 
   handleContextRef = ref => this.setState({ stickyContext: ref });
 
+  onChange = () => {
+    this.props.onChange({
+      name: this.state.chordName,
+      activeNotes: this.state.activeNotes,
+    });
+  }
+
   onChangeChordName = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({ chordName: e.target.value });
 
-  toggleEdit = () => this.setState(({ isEditing }) => ({ isEditing: !isEditing }));
+  delete = () => this.props.onDelete();
+
+  toggleEdit = () => this.setState(state => {
+    if (state.isEditing) {
+      this.props.onChange({
+        name: state.chordName,
+        activeNotes: state.activeNotes,
+      });
+    }
+    return {
+      ...state,
+      isEditing: !state.isEditing,
+    };
+  })
 
   toggleCell = (event: React.MouseEvent<HTMLDivElement>, note: ActiveNote) => {
     this.setState(state => {
@@ -171,31 +168,48 @@ class Chord extends React.Component<ChordProps, ChordState> {
 
   midiRef = ref => this.setState({ midiRef: ref, isMidiReady: true });
 
+  renderActions = () => {
+    return (
+      <div className={css(styles.actions)}>
+        <Button
+          icon={this.state.isEditing ? 'save' : 'edit'}
+          circular={true}
+          onClick={this.toggleEdit}
+        />
+        <Button
+          icon="delete"
+          circular={true}
+          onClick={this.delete}
+        />
+      </div>
+    );
+  }
+
   render() {
     const { activeNotes, chordName, isEditing, stickyContext } = this.state;
     const { strings = 6, frets = 5 } = this.props;
     return (
-      <Card ref={this.handleContextRef}>
-        <Button circular={true} onClick={this.toggleEdit} icon="edit" />
-        {
-          isEditing
-            ? (
-              <Input type="text" value={chordName} onChange={this.onChangeChordName} />
-            ) : (
-              <Header as="h5">{chordName}</Header>
-            )
-        }
+      <Card className={css(styles.mainContainer)} ref={this.handleContextRef}>
+        <div className={css(styles.nameContainer)}>
+          {
+            isEditing
+              ? (
+                <Input type="text" className={css(styles.nameInput)} value={chordName} onChange={this.onChangeChordName} />
+              ) : (
+                <Header className={css(styles.name)} as="h5">{chordName}</Header>
+              )
+          }
+          {
+            this.renderActions()
+          }
+        </div>
         <PureChord
           frets={frets}
           strings={strings}
+          firstFret={0}
           canEdit={isEditing}
           activeNotes={activeNotes}
           onClickCell={this.toggleCell}
-        />
-        <MIDISounds
-          ref={this.midiRef}
-          appElementName="root"
-          instruments={[262]}
         />
       </Card>
     );

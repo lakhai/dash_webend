@@ -1,12 +1,19 @@
 import * as React from 'react';
 import { storiesOf, addDecorator } from '@storybook/react';
+import 'semantic-ui-css/semantic.min.css';
 
 import Chord from '../../../src/components/SongBook/Chord';
-import { Header, Progress } from 'semantic-ui-react';
 
 storiesOf('Chord', module)
   .add('Normal', () => {
     return (
-      <Progress percent={20} />
+      <div style={{ padding: '50px' }}>
+        <Chord
+          onChange={data => null}
+          onDelete={() => null}
+          frets={3}
+          name="Cmaj7"
+        />
+      </div>
     );
   });

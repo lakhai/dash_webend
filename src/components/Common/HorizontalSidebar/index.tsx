@@ -40,6 +40,10 @@ class HorizontalSidebar extends React.Component<Props, {}> {
           <Icon size="small" name="dollar sign" />
           {isOpen && 'Economía'}
         </Menu.Item>
+        <Menu.Item name="evaluation" href="/dashboard/evaluation">
+          <Icon size="small" name="eye" />
+          {isOpen && 'Evaluación'}
+        </Menu.Item>
         <Menu.Item name="savings" href="/dashboard/savings">
           <SavingsIcon style={{ marginBottom: isOpen ? '5px' : '0' }} size={isOpen ? 'large' : 'small'} />
           {isOpen && 'Metas de Ahorro'}
